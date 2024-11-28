@@ -25,7 +25,7 @@ function setClickThrough(obj) {// {windowTitle:"", enabled:true}
 
 // POWERSHELL EVAL
 function ps(cmd, callback) {
-    exec(`powershell -ep Bypass -Command "${cmd.trim().replaceAll(/"/g,'\\"')}"`, (err, out)=>typeof callback=="function"&&callback(err, out))
+    exec(`powershell -ep Bypass -Command "${cmd.trim().replaceAll(/"/g,'\\"')}"`, (err, out, stderr)=>typeof callback=="function"&&callback(err, out, stderr))
 }
 
 
