@@ -1,5 +1,9 @@
 Neutralino.init()
-const EXIT_KEY = "escape", ws = new WebSocket("ws://localhost:3000"), backlog = []
+const EXIT_KEY = "escape",
+    WINDOW_TITLE = ""
+
+ws = new WebSocket("ws://localhost:3000"),
+backlog = []
 
 // CLOSES APP ON 'EXIT_KEY' PRESS
 document.addEventListener("keydown", e=>{

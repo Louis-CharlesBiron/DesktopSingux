@@ -10,6 +10,7 @@ function handle(obj) {
     if (t=="kill") kill()
     else if (t=="setclickthrough") setClickThrough(v)
     else if (t=="movewindow") moveWindow(v)
+    else if (t=="setwindowdisplay") setWindowDisplay(v)
 }
 
 // CALLS DEFINITIONS //
@@ -22,6 +23,14 @@ function kill() {
 // CHANGES SPECIFIC WINDOW'S CLICK-THROUGH ABILITIES
 function setClickThrough(obj) {// {windowTitle:"", enabled:true}
     ps(`${scripts.CLICK_THROUGH} script "${obj.windowTitle}" "${obj.enabled}"`)
+}
+
+function setWindowDisplay(obj) {// {windowTitle:"", flag:6}
+    ps(`${scripts.WINDOW_DISPLAY} script "${obj.windowTitle}" "${obj.flag}"`, (a,b,c)=>console.log(a,b,c))
+}
+
+function setWindowDisplay(obj) {// {windowTitle:"", flag:6}
+    ps(`${scripts.WINDOW_DISPLAY} script "${obj.windowTitle}" "${obj.flag}"`, (a,b,c)=>console.log(a,b,c))
 }
 
 // MOVES SPECIFIC WINDOW
