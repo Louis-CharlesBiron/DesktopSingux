@@ -2,7 +2,7 @@
   "name": "desktopsingux",
   "version": "1.0.0",
   "description": "",
-  "main": "test.js",
+  "main": "server.js",
   "scripts": {
     "i": "npm install && npx @neutralinojs/neu update && powershell -Command \"Remove-Item -Path public/assets/scripts/*.ts -Force\"",
     "start": "concurrently  \"npx @neutralinojs/neu run\"  \"node back/server.js\"",
@@ -15,6 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "concurrently": "^9.1.0",
+    "robotjs": "^0.6.0",
     "ws": "^8.18.0"
   }
 }
