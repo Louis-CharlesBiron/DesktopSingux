@@ -20,8 +20,8 @@ wss.on("connection", (ws, req) => {
         let m = JSON.parse(message.toString())
         //console.log(m)
 
-        // handle commands
-        handle(m)
+        // HANDLE COMMANDS
+        handle(m, client)
     })
 })
 

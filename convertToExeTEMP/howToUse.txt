@@ -1,8 +1,0 @@
-(Using the PS2EXE module)
-
-Place any .ps1 files you want to convert to .exe at the root of THIS folder. (convertToExe/)
-Then run convertToExe.exe
-
-(do not delete: 0data, PS2EXEModule, convertToExe.exe, howToUse.txt)
-
-:)
