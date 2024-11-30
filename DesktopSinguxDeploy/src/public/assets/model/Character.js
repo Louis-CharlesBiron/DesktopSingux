@@ -5,34 +5,49 @@ class Character {
     //       set different cooldown
     //       different actions
 
-    constructor(posX, posY) {
+    constructor(pos) {
         this._id = 1
-        this._ctx
-        this._x = posX
-        this._y = posY
+        this._cvs = null
+        this._initPos = pos||[0,0]
+        this._pos = this._initPos
     }
 
+    initialize() {
+        if (typeof this._initPos=="function") this._pos = this._initPos(this._cvs)
+    }
 
     // TODO doc + review specs
-    draw() {
-        this._ctx.fillStyle = "red"
-        this._ctx.beginPath()
-        this._ctx.arc(this._x, this._y, 5, 0, CIRC)
-        this._ctx.fill()
+    draw(ctx, time) {
+        ctx.fillStyle = "red"
+        ctx.beginPath()
+        ctx.arc(this.x, this.y, 10, 0, CIRC)
+        ctx.fill()
+
+        this.tick()
+    }
+
+    tick() {
+        this.x += random(-3, 3)
+        this.y += random(-3, 3)
     }
 
     // Character movement
     move() { }
 
     
-    minimiseWindow() { }
+    minimizeWindow() { }
 
 
 
-    get x() { return this._x }
-    get y() { return this._y }
-    get id() { return this._id }
+	get id() {return this._id}
+	get cvs() {return this._cvs}
+    get x() {return this._pos[0]}
+    get y() {return this._pos[1]}
+    get pos() {return this._pos}
+	get initPos() {return this._initPos}
 
-    set x(x) { this._x = x }
-    set y(y) { this._y = y }
+	set cvs(_cvs) {return this._cvs = _cvs}
+    set x(x) {this._pos[0] = x}
+    set y(y) {this._pos[1] = y}
+
 }

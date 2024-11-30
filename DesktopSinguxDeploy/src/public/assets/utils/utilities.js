@@ -1,4 +1,4 @@
-const ACCEPTABLE_DIF = 0.0000001, CIRC = 2 * Math.PI
+const ACCEPTABLE_DIF = 0.0000001
 
 function random(min, max, decimals = 0) {
     return +(Math.random() * (max - min) + min).toFixed(decimals)
