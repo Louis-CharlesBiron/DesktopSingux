@@ -2,9 +2,17 @@ const fpsCounter = new FPSCounter(), CVS = new Canvas(canvas, ()=>{//looping
     fpsDisplay.textContent = fpsCounter.getFps()+"\n"+fpsCounter.fpsRaw
     mouseSpeed.textContent = CVS?.mouse?.speed?.toFixed(2)+" px/sec"
     mouseAngle.textContent = CVS?.mouse?.dir?.toFixed(2)+" deg"
+    let ds = character.posDistances()
+    characterDists.textContent = `
+             ${ds[0].toFixed(1)}
+                |
+  ${ds[3].toFixed(1)} -  +  - ${ds[1].toFixed(1)}
+                | 
+             ${ds[2].toFixed(1)}
+    `
 })
 
-const character = new Character(cvs=>cvs.getCenter())
+const character = new Character(cvs=>cvs.getCenter(), [20, 20])
 
 CVS.add(character, true, true)
 

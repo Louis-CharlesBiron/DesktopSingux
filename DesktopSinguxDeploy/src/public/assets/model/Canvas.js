@@ -35,7 +35,7 @@ class Canvas {
         this.setSize(frameCBR.width, frameCBR.height)           //init size
         this.initStyles()                                       //init styles
 
-        this._mouse = {}                                        //mouse info
+        this._mouse = {}                                        //mouse info -> {ok:false,x:null,y:null,lastX:null,lastY:null,speed:null,dir:null,clicked:false,scrollClicked:false,rightClicked:false,extraBackClicked:false,extraForwardClicked:false}
         this._offset = this.updateOffset()                      //cvs page offset
     }
 
@@ -104,7 +104,7 @@ class Canvas {
             let o=Object.entries(x)
             return o[0][1][o[0][0]]
         })].forEach(el=>{
-            if (el.draw) el.draw(this._ctx, this.timeStamp)
+            if (el.draw) el.draw(this._ctx, this.timeStamp, this._mouse)
         })
     }
 
@@ -176,6 +176,9 @@ class Canvas {
             if (r.ratioPosCB===undefined) r.ratioPos=[this._mouse.x,this._mouse.y]
         })
         if (typeof cb == "function") cb(this._mouse, e)
+
+        if (this._mouse.x == Infinity || this._mouse.x == null || this._mouse.y == Infinity || this._mouse.y == null) this._mouse.ok = false
+        else if (!this._mouse.ok) this._mouse.ok = true
     }
 
     setmousemove(cb) {
