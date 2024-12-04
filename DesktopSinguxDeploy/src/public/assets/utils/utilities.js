@@ -33,7 +33,8 @@ class FPSCounter {
     set avgSample(s) { this._avgSampleSize = s }
 }
 
-Array.prototype.last = function (index = 0) { return this[this.length - 1 - index] }
+Array.prototype.last=function(index=0){return this[this.length-1-index]}
+Array.prototype.addAt=function(el, index=0){return this.slice(0,index).concat(...[el, this.slice(index, this.length)])}
 
 function getDist(x1, y1, x2, y2) {
     return Math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
@@ -67,3 +68,4 @@ function toDeg(rad) {
 function getAcceptableDif(n, okDif) {
     return Math.round(n) - n <= okDif ? Math.round(n) : n
 }
+

@@ -17,6 +17,8 @@ class Character extends Obj {
 
     // Runs every frame and draws the object (Canvas drawable context, time in milisecond since start, mouse infos)
     draw(ctx, time, mouse) {
+        super.draw(ctx, time)
+        
         ctx.fillStyle = "red"
         ctx.beginPath()
         ctx.arc(this.x, this.y, 10, 0, CIRC)
@@ -36,8 +38,26 @@ class Character extends Obj {
 
     }
 
-    moveTo(pos, easing) {
+    moveTo(pos, time=1000, easing=Anim.easeInOutQuad) {
+        let ix = this.x, iy = this.y, 
+        dx = pos[0]-ix,
+        dy = pos[1]-iy
 
+        return this.queueAnim(new Anim((prog)=>{
+            this.x = ix+dx*prog
+            this.y = iy-dy*prog
+        }, time, easing, ()=>this._anims.shift()), true)
+    }
+
+    addForce(force, dir, time=1000, easing=Anim.easeInOutQuad) {
+        let rDir = toRad(dir), ix = this.x, iy = this.y,
+            dx = getAcceptableDif(force*Math.cos(rDir), ACCEPTABLE_DIF),
+            dy = getAcceptableDif(force*Math.sin(rDir), ACCEPTABLE_DIF)
+    
+        return this.queueAnim(new Anim((prog)=>{
+            this.x = ix+dx*prog
+            this.y = iy-dy*prog
+        }, time, easing, ()=>this._anims.shift()), true)
     }
 
     minimizeWindow() { }
