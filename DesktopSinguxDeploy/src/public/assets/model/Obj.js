@@ -17,7 +17,6 @@ class Obj {
 
     // Runs every frame
     draw(ctx, time) {
-        console.log(this._anims[0])
         if (this._anims[0]) this._anims[0].getFrame(time)
     }
 
@@ -37,6 +36,18 @@ class Obj {
     moveBy(pos) {
         if (pos[0] !== null) this.x += pos[0]
         if (pos[1] !== null) this.y += pos[1]
+    }
+
+    // Smoothly moves to coords in set time
+    moveTo(pos, time=1000, easing=Anim.easeInOutQuad) {
+        let ix = this.x, iy = this.y, 
+        dx = pos[0]-ix,
+        dy = pos[1]-iy
+
+        return this.queueAnim(new Anim((prog)=>{
+            this.x = ix+dx*prog
+            this.y = iy+dy*prog
+        }, time, easing, ()=>this._anims.shift()), true)
     }
 
     // adds an animation to the end of the backlog

@@ -38,28 +38,6 @@ class Character extends Obj {
 
     }
 
-    moveTo(pos, time=1000, easing=Anim.easeInOutQuad) {
-        let ix = this.x, iy = this.y, 
-        dx = pos[0]-ix,
-        dy = pos[1]-iy
-
-        return this.queueAnim(new Anim((prog)=>{
-            this.x = ix+dx*prog
-            this.y = iy-dy*prog
-        }, time, easing, ()=>this._anims.shift()), true)
-    }
-
-    addForce(force, dir, time=1000, easing=Anim.easeInOutQuad) {
-        let rDir = toRad(dir), ix = this.x, iy = this.y,
-            dx = getAcceptableDif(force*Math.cos(rDir), ACCEPTABLE_DIF),
-            dy = getAcceptableDif(force*Math.sin(rDir), ACCEPTABLE_DIF)
-    
-        return this.queueAnim(new Anim((prog)=>{
-            this.x = ix+dx*prog
-            this.y = iy-dy*prog
-        }, time, easing, ()=>this._anims.shift()), true)
-    }
-
     minimizeWindow() { }
 
     // GETTERS
