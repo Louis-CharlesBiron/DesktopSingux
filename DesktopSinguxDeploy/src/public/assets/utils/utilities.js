@@ -69,3 +69,8 @@ function getAcceptableDif(n, okDif) {
     return Math.round(n) - n <= okDif ? Math.round(n) : n
 }
 
+function weightedRandom(weights) {// [5, 14, 200, 4, 80...]
+    let pool = weights.reduce((a,b,i)=>a.concat((a[i-1]??0)+b), []), num = random(0, pool[pool.length-1])
+    return pool.indexOf(pool.reduce((a,b)=>a<num?b:a,-1))
+}
+

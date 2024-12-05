@@ -39,15 +39,15 @@ class Obj {
     }
 
     // Smoothly moves to coords in set time
-    moveTo(pos, time=1000, easing=Anim.easeInOutQuad) {
-        let ix = this.x, iy = this.y, 
+    moveTo(pos, time=1000, easing=Anim.easeInOutQuad, force=true, initPos=[this.x, this.y]) {
+        let [ix, iy] = initPos,
         dx = pos[0]-ix,
         dy = pos[1]-iy
 
         return this.queueAnim(new Anim((prog)=>{
             this.x = ix+dx*prog
             this.y = iy+dy*prog
-        }, time, easing, ()=>this._anims.shift()), true)
+        }, time, easing, ()=>this._anims.shift()), force)
     }
 
     // adds an animation to the end of the backlog

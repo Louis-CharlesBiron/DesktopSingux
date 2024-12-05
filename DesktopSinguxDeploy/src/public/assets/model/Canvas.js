@@ -104,7 +104,7 @@ class Canvas {
             let o=Object.entries(x)
             return o[0][1][o[0][0]]
         })].forEach(el=>{
-            if (el.draw) el.draw(this._ctx, this.timeStamp, this._mouse)
+            if (el.draw) el.draw(this._ctx, this.timeStamp, this._deltaTime, this._mouse)
         })
     }
 
