@@ -23,7 +23,7 @@ class Character extends Obj {
         IDLE:new State("idle", [
             new Action("move_near", (end)=>{
                 console.log("move_near")
-                let duration = random(2000, 4000), radius = random(10, 125)
+                let duration = random(2000, 4000), radius = random(20, 125)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
             }, 15, 5000, 0.5),
@@ -43,8 +43,8 @@ class Character extends Obj {
             }, 100, 30000, 0),
             new Action("idle", (end)=>{
                 console.log("idling")
-                setTimeout(()=>end(), 5000)
-            }, 10, 0)
+                setTimeout(()=>end(), 4000)
+            }, 5, 0)
         ], 6000)
     }
 
@@ -73,7 +73,9 @@ class Character extends Obj {
         // state updates
         if (this._state.name !== "none") this._state.tick(deltaTime*1000)
 
-
+        if (this.isWithin([m.x,m.y])) this._cvs.cvs.style.cursor = "pointer"
+        else this._cvs.cvs.style.cursor = "default"
+            
         // just pour tester jar
         //if (m.ok) {
         //    let dist = getDist(this.x, this.y, m.x, m.y), 

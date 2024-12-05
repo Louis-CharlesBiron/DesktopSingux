@@ -8,6 +8,7 @@ class Obj {
         this._size = size||[50,50]  // size in px : [width, height]
         this._scale = [1,1]         // scale factor : [scaleX, scaleY]
         this._anims = []            // backlogs of animations to play
+        this._drawHitboxes = false
     }
 
     // Runs when the object gets added to a canvas instance
@@ -18,6 +19,18 @@ class Obj {
     // Runs every frame
     draw(ctx, time) {
         if (this._anims[0]) this._anims[0].getFrame(time)
+        if (this._drawHitboxes) {
+            ctx.strokeStyle = "red"
+            ctx.beginPath()
+            ctx.rect(this.left, this.top, this.width, this.height)
+            ctx.stroke()
+        }
+    }
+
+    // returns whether the provided pos is inside the obj
+    isWithin(pos) {
+        let [x,y]=pos
+        return x >= this.left && x <= this.right && y >= this.top && y <= this.bottom
     }
 
     // Returns the [top, right, bottom, left] distances between the canvas limits, according to the object's size
@@ -65,6 +78,10 @@ class Obj {
 	get id() {return this._id}
     get x() {return this._pos[0]}
     get y() {return this._pos[1]}
+    get top() {return this.y-this.height/2}
+    get bottom() {return this.y+this.height/2}
+    get right() {return this.x+this.width/2}
+    get left() {return this.x-this.width/2}
     get pos() {return this._pos}
 	get initPos() {return this._initPos}
     get scaleX() {return this._scale[0]}
@@ -74,6 +91,7 @@ class Obj {
     get height() {return this._size[1]}
     get size() {return this._size}
     get currentAnim() {return this._anims[0]}
+    get drawHitboxes() {return this._drawHitboxes}
 
     //SETTERS
     set x(x) {this._pos[0] = x}
@@ -85,5 +103,6 @@ class Obj {
     set width(w) {this._size[0] = w}
     set height(h) {this._size[1] = h}
     set size(s) {this._size = s}
+    set drawHitboxes(d) {this._drawHitboxes = d}
 
 }
