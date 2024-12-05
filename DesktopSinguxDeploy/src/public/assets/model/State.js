@@ -7,7 +7,7 @@ class State {
         this._currentAction = null  // current action being played
         this._startTime = null      // time in ms at start
         this._actionPlayed = 0      // count of all played action
-        this._delay = baseDelay         // delay between action picks
+        this._delay = baseDelay     // delay between action picks
         this._delayProg = 0         // delay progress
     }
 
@@ -24,7 +24,7 @@ class State {
         let possibleActions = this._actions.filter(a=>!a.cooldownProg)
         if (possibleActions.length) {
             this._currentAction = possibleActions[weightedRandom(possibleActions.map(a=>a.weight))].play(()=>this._currentAction=null)
-            this._delayProg = this._delay+(!this._currentAction.stateIgnoredCooldown&&this._currentAction.cooldown)
+            this._delayProg = this._delay+this._currentAction.modCooldown
             this._actionPlayed++
         }
     }

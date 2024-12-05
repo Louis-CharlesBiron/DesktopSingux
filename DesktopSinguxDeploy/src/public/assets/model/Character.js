@@ -26,13 +26,13 @@ class Character extends Obj {
                 let duration = random(2000, 4000), radius = random(10, 125)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
-            }, 15, 5000),
+            }, 15, 5000, 0.5),
             new Action("move_far", (end)=>{
                 console.log("move_far")
                 let duration = random(4000, 7000), radius = random(125, 400)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
-            }, 10, 8000),
+            }, 10, 8000, 0.5),
             new Action("backflip", (end)=>{
                 console.log("backflip")
                 this.moveTo([this.x, this.y-8], 300, null, false)
@@ -40,7 +40,7 @@ class Character extends Obj {
                 this.moveTo([this.x, this.y-8], 300, null, false, [this.x, this.y+8])
                 this.moveTo([this.x, this.y+8], 300, null, false, [this.x, this.y-8])
                 setTimeout(()=>end(), 2000)
-            }, 100, 30000, true),
+            }, 100, 30000, 0),
             new Action("idle", (end)=>{
                 console.log("idling")
                 setTimeout(()=>end(), 5000)
