@@ -65,9 +65,9 @@ class Obj {
 
     // adds an animation to the end of the backlog
     queueAnim(anim, force) {
-        if (this.currentAnim && force) {
-            this._anims.addAt(anim, 1)
+    if (this.currentAnim && force) {
             this.currentAnim.end()
+            this._anims.addAt(anim, 1)
         }
         if (!anim.endCallback) anim.endCallback=()=>this._anims.shift()
         this._anims.push(anim)

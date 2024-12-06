@@ -24,12 +24,13 @@ class Character extends Obj {
             new Action("move_near", (end)=>{
                 console.log("move_near")
                 let duration = random(2000, 4000), radius = random(20, 125)
+                console.log(this.x, this.y)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
             }, 10, 5000, 0.5),
             new Action("move_far", (end)=>{
                 console.log("move_far")
-                let duration = random(4000, 7000), radius = random(125, 400)
+                let duration = random(4000, 7000), radius = random(225, 700)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
             }, 15, 8000, 0.5),
@@ -85,7 +86,15 @@ class Character extends Obj {
         //    this.moveBy([modifier*dirX, modifier*dirY])
         //}
 
+    }
 
+    moveTo(pos, time=1000, easing=Anim.easeInOutQuad, force=true, initPos=[this.x, this.y]) {
+        const padding = [2+this.width/2,2+this.height/2], dists = this.posDistances(pos)
+        if (dists[0] <= padding[1]) pos[1] = padding[1]
+        else if (dists[2] <= padding[1]) pos[1] = this._cvs.height-padding[1]
+        if (dists[1] <= padding[0]) pos[0] = this._cvs.width-padding[0]
+        else if (dists[3] <= padding[0]) pos[0] = padding[0]
+        super.moveTo(pos, time, easing, force, initPos)
     }
 
     minimizeWindow() { }

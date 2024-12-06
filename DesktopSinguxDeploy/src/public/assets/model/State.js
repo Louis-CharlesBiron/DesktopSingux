@@ -8,6 +8,7 @@ class State {
         this._actionPlayed = 0      // count of all played action
         this._delay = baseDelay     // delay between action picks
         this._delayProg = 0         // delay progress
+        this._paused = false      // whether the state is paused
     }
 
     // called once on character state change
@@ -21,28 +22,33 @@ class State {
     // chooses and plays action
     chooseAction() {
         let possibleActions = this._actions.filter(a=>!a.cooldownProg)
-        if (possibleActions.length) {
-            this._currentAction = possibleActions[weightedRandom(possibleActions.map(a=>a.weight))].play(()=>this._currentAction=null)
-            this._delayProg = this._delay+this._currentAction.modCooldown
-            this._actionPlayed++
-        }
+        if (possibleActions.length) this.playAction(possibleActions[weightedRandom(possibleActions.map(a=>a.weight))])
+    }
+
+    playAction(action) {
+        if (typeof action=="string") action = this._actions.find(a=>a.name==action)
+        this._currentAction = action.play(()=>this._currentAction=null)
+        this._delayProg = this._delay+this._currentAction.modCooldown
+        this._actionPlayed++
     }
 
     // runs every frame
     tick(msDeltaTime) {
-        if (this._delayProg > 0) {// state cooldown
-            this._delayProg -= msDeltaTime
-            if (this._delayProg < 0) this._delayProg = 0
-        } else if (!this._currentAction) {// can choose action if no current action
-            this.chooseAction()
-            console.log("CHOOSING:", this._delayProg, this._actions.map(x=>x.cooldownProg))
-        }
+        if (!this._paused) {
+            if (this._delayProg > 0) {// state cooldown
+                this._delayProg -= msDeltaTime
+                if (this._delayProg < 0) this._delayProg = 0
+            } else if (!this._currentAction) {// can choose action if no current action
+                this.chooseAction()
+                console.log("CHOOSING:", this._delayProg, this._actions.map(x=>x.cooldownProg))
+            }
 
-        // action cooldown
-        this._actions.filter(a=>a.cooldownProg > 0).forEach(a=>{
-            a.cooldownProg -= msDeltaTime
-            if (a.cooldownProg < 0) a.cooldownProg = 0
-        })
+            // action cooldown
+            this._actions.filter(a=>a.cooldownProg > 0).forEach(a=>{
+                a.cooldownProg -= msDeltaTime
+                if (a.cooldownProg < 0) a.cooldownProg = 0
+            })
+        }
     }
 
     get name() {return this._name}
@@ -52,10 +58,13 @@ class State {
 	get actionPlayed() {return this._actionPlayed}
 	get delay() {return this._delay}
 	get delayProg() {return this._delayProg}
+	get paused() {return this._paused}
+	get ACTIONS() {return this._actions.map(a=>a.name)}
 
 	set name(_name) {return this._name = _name}
 	set actions(_actions) {return this._actions = _actions}
 	set delay(delay) {return this._delay = delay}
+	set paused(p) {return this._paused = p}
 
 
 }
