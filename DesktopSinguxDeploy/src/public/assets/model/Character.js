@@ -26,13 +26,13 @@ class Character extends Obj {
                 let duration = random(2000, 4000), radius = random(20, 125)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
-            }, 15, 5000, 0.5),
+            }, 10, 5000, 0.5),
             new Action("move_far", (end)=>{
                 console.log("move_far")
                 let duration = random(4000, 7000), radius = random(125, 400)
                 this.moveTo(this.getRandomPosInRadius(radius), duration)
                 setTimeout(()=>end(), duration)
-            }, 10, 8000, 0.5),
+            }, 15, 8000, 0.5),
             new Action("backflip", (end)=>{
                 console.log("backflip")
                 this.moveTo([this.x, this.y-8], 300, null, false)
@@ -73,8 +73,10 @@ class Character extends Obj {
         // state updates
         if (this._state.name !== "none") this._state.tick(deltaTime*1000)
 
-        if (this.isWithin([m.x,m.y])) this._cvs.cvs.style.cursor = "pointer"
-        else this._cvs.cvs.style.cursor = "default"
+        if (this.isWithin([m.x,m.y])) document.body.style.cursor = "pointer"
+        else document.body.style.cursor = "default"
+
+        if (m.clicked && this.isWithin([m.x,m.y])) console.log("YOOOO")
             
         // just pour tester jar
         //if (m.ok) {

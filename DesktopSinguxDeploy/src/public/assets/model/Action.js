@@ -1,4 +1,3 @@
-// 
 class Action {
 
     constructor(name, action, weight, cooldown=5000, sciModifier=1) {
@@ -7,8 +6,7 @@ class Action {
         this._weight = weight            // probability of being chosen, number 1-100, 100 being the most likely
         this._cooldown = cooldown        // cooldown in ms before being available to be played again 
         this._cooldownProg = 0           // cooldown progress in ms 
-        this._sciModifier = sciModifier  // modifier of this action's cooldown value when the state is setting its own
-        // CHANGE ↑ this to modifier instead of bool probably
+        this._sciModifier = sciModifier  // modifier of this action's cooldown value when the state is setting its own (state cooldown increment modifier)
     }
 
     play(endCallback) {

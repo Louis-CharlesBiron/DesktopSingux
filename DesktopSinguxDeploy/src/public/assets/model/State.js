@@ -1,5 +1,4 @@
-// 
-
+// Contains and manages a set of actions
 class State {
     constructor(name, actions=[], baseDelay=3000) {
         this._name = name           // state name, ex: idle
@@ -36,7 +35,7 @@ class State {
             if (this._delayProg < 0) this._delayProg = 0
         } else if (!this._currentAction) {// can choose action if no current action
             this.chooseAction()
-            console.log("CHOSING:", this._delayProg, this._actions.map(x=>x.cooldownProg))
+            console.log("CHOOSING:", this._delayProg, this._actions.map(x=>x.cooldownProg))
         }
 
         // action cooldown
