@@ -23,15 +23,15 @@ class Character extends Obj {
         IDLE:new State("idle", [
             new Action("move_near", (end)=>{
                 console.log("move_near")
-                let duration = random(2000, 4000), radius = random(20, 125)
+                let duration = random(2000, 4000), radiusMin = 20, radiusMax = 125
                 console.log(this.x, this.y)
-                this.moveTo(this.getRandomPosInRadius(radius), duration)
+                this.moveTo(this.getRandomPosInRadius(radiusMin, radiusMax, 0.5), duration)
                 setTimeout(()=>end(), duration)
             }, 10, 5000, 0.5),
             new Action("move_far", (end)=>{
                 console.log("move_far")
-                let duration = random(4000, 7000), radius = random(225, 700)
-                this.moveTo(this.getRandomPosInRadius(radius), duration)
+                let duration = random(4000, 7000), radiusMin = 225, radiusMax = 450
+                this.moveTo(this.getRandomPosInRadius(radiusMin, radiusMax, 0.5), duration)
                 setTimeout(()=>end(), duration)
             }, 15, 8000, 0.5),
             new Action("backflip", (end)=>{
@@ -88,7 +88,8 @@ class Character extends Obj {
 
     }
 
-    moveTo(pos, time=1000, easing=Anim.easeInOutQuad, force=true, initPos=[this.x, this.y]) {
+    // smoothly moves the character to specified pos, but positions are restrained to inside the canvas
+    moveTo(pos, time=1000, easing=Anim.easeInOutQuad, force=true, initPos=this.pos) {
         const padding = [2+this.width/2,2+this.height/2], dists = this.posDistances(pos)
         if (dists[0] <= padding[1]) pos[1] = padding[1]
         else if (dists[2] <= padding[1]) pos[1] = this._cvs.height-padding[1]
@@ -97,11 +98,24 @@ class Character extends Obj {
         super.moveTo(pos, time, easing, force, initPos)
     }
 
-    minimizeWindow() { }
+    // returns a random pos within a certain radius of the provided pos.
+    // weightModifier [0..1] is how much the returned pos will favoritise being towards the center (1=no weight, 0=will only go towards the center)
+    getRandomPosInRadius(radiusMin=0, radiusMax=50, weightModifier=1, pos=this.pos) {
+        let [x, y] = pos, [dt, dr, db, dl] = this.posDistances(pos),
+            retDxy = [random(-radiusMax,radiusMax), random(-radiusMax,radiusMax)]
 
-    getRandomPosInRadius(radius) {
-        return [this.x+random(-radius,radius), this.y+random(-radius,radius)]
+        if (weightModifier !== 1) {
+            if (dt > db) retDxy[1] = random(-radiusMax,radiusMax*weightModifier) //go more top
+            else retDxy[1] = random(-radiusMax*weightModifier,radiusMax) //go bottom
+            if (dr > dl) retDxy[0] = random(-radiusMax*weightModifier,radiusMax) //go right
+            else retDxy[0] = random(-radiusMax,radiusMax*weightModifier) //go left
+        }
+
+        console.log(pos, retDxy, [x+(Math.abs(retDxy[0])>=radiusMin?retDxy[0]:radiusMin*Math.sign(retDxy[0])), y+(Math.abs(retDxy[1])>=radiusMin?retDxy[1]:radiusMin*Math.sign(retDxy[0]))])
+        return [x+(Math.abs(retDxy[0])>=radiusMin?retDxy[0]:radiusMin*Math.sign(retDxy[0])), y+(Math.abs(retDxy[1])>=radiusMin?retDxy[1]:radiusMin*Math.sign(retDxy[0]))]
     }
+
+
 
     setState(state) {
         this._state = state.init(this._cvs.timeStamp)
