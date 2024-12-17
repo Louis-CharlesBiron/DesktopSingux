@@ -2,7 +2,7 @@ class Action {
 
     constructor(name, action, weight, cooldown=5000, sciModifier=1) {
         this._name = name                // action name, ex: minimizeWindow
-        this._action = action            // callback containing the action to run: (end)=>{} // end is a function that needs to be called when the action is finished
+        this._action = action            // callback containing the action to run: (end)=>{} // the provided "end" parameter is a function you need to call when your action is finished
         this._weight = weight            // probability of being chosen, number 1-100, 100 being the most likely
         this._cooldown = cooldown        // cooldown in ms before being available to be played again 
         this._cooldownProg = 0           // cooldown progress in ms 

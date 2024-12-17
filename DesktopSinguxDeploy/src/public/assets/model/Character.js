@@ -1,8 +1,9 @@
 class Character extends Obj {
 
     #CHARACTER_STATES = {
-        NONE:new State("none"),
-        TEST:new State("idle", [
+        NONE:new State("none"), // no artificial intelligence, testing only
+
+        TEST:new State("test", [// testing only
             new Action("test1", (end)=>{
                 console.log("do action 1")
                 setTimeout(()=>end(), 2000)
@@ -20,11 +21,12 @@ class Character extends Obj {
                 setTimeout(()=>end(), 3000)
             }, 12, 0)
         ]),
+
+        // MOVES AROUND AND DOES SMALL IDLE ANIMATION
         IDLE:new State("idle", [
             new Action("move_near", (end)=>{
                 console.log("move_near")
                 let duration = random(2000, 4000), radiusMin = 20, radiusMax = 125
-                console.log(this.x, this.y)
                 this.moveTo(this.getRandomPosInRadius(radiusMin, radiusMax, 0.5), duration)
                 setTimeout(()=>end(), duration)
             }, 10, 5000, 0.5),
@@ -46,16 +48,41 @@ class Character extends Obj {
                 console.log("idling")
                 setTimeout(()=>end(), 4000)
             }, 5, 0)
-        ], 6000)
+        ], 6000, 8000, ()=>{
+            console.log("ENDED idle")
+            this.setState(this.#CHARACTER_STATES.OPENER)
+        }),
+
+        OPENER:new State("opener", [
+            new Action("open_explorer", (end)=>{
+                console.log("open_explorer")
+                let duration = random(2000, 4000), radiusMin = 20, radiusMax = 125
+                send({type:"ps", value:"explorer.exe"})
+                //this.moveTo(this.getRandomPosInRadius(radiusMin, radiusMax, 0.5), duration)
+                setTimeout(()=>end(), duration)
+            }, 10, 5000, 0.5),
+            new Action("idle", (end)=>{
+                console.log("idling")
+                setTimeout(()=>end(), 4000)
+            }, 5, 0)
+        ], 6000, 60000, ()=>{
+            console.log("ENDED opener")
+            this.setState(this.#CHARACTER_STATES.NONE)
+        }),
     }
 
     constructor(pos, size) {
         super(pos, size)
-        this._cvs = null                            // Canvas instance
-        this._speed = 1                             // speed
-        this._state = this.#CHARACTER_STATES.IDLE   // current state of the character
+        this._cvs = null                                    // Canvas instance
+        this._speed = 1                                     // speed
+        //this._state = this.#CHARACTER_STATES.IDLE           // current state of the character
     }
 
+    // Runs when the object gets added to a canvas instance
+    initialize() {
+        super.initialize()
+        this.setState(this._state)
+    }
 
     // Runs every frame and draws the object (Canvas drawable context, time in milisecond since start, mouse infos)
     draw(ctx, time, deltaTime, mouse) {
@@ -67,25 +94,15 @@ class Character extends Obj {
         ctx.fill()
 
         this.tick(ctx, deltaTime, mouse)
+
+        // state updates
+        if (this._state && this._state.name !== "none") this._state.tick(deltaTime*1000)
     }
 
     // Runs every frame
     tick(ctx, deltaTime, m) {
-        // state updates
-        if (this._state.name !== "none") this._state.tick(deltaTime*1000)
-
         if (this.isWithin([m.x,m.y])) document.body.style.cursor = "pointer"
         else document.body.style.cursor = "default"
-
-        if (m.clicked && this.isWithin([m.x,m.y])) console.log("YOOOO")
-            
-        // just pour tester jar
-        //if (m.ok) {
-        //    let dist = getDist(this.x, this.y, m.x, m.y), 
-        //        modifier = mod(1, dist/((dist+50)*1.5), 1), dirX = Math.sign(m.x-this.x), dirY = Math.sign(m.y-this.y)
-        //    this.moveBy([modifier*dirX, modifier*dirY])
-        //}
-
     }
 
     // smoothly moves the character to specified pos, but positions are restrained to inside the canvas
@@ -111,14 +128,12 @@ class Character extends Obj {
             else retDxy[0] = random(-radiusMax,radiusMax*weightModifier) //go left
         }
 
-        console.log(pos, retDxy, [x+(Math.abs(retDxy[0])>=radiusMin?retDxy[0]:radiusMin*Math.sign(retDxy[0])), y+(Math.abs(retDxy[1])>=radiusMin?retDxy[1]:radiusMin*Math.sign(retDxy[0]))])
         return [x+(Math.abs(retDxy[0])>=radiusMin?retDxy[0]:radiusMin*Math.sign(retDxy[0])), y+(Math.abs(retDxy[1])>=radiusMin?retDxy[1]:radiusMin*Math.sign(retDxy[0]))]
     }
 
-
-
+    // sets the active state and initializes it
     setState(state) {
-        this._state = state.init(this._cvs.timeStamp)
+        return this._state = state?.init(this._cvs.timeStamp)
     }
 
     // GETTERS
